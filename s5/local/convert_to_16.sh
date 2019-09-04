@@ -3,7 +3,7 @@
 if [ $# -eq 0 ]
 then
         echo
-        echo "Missing target folder to convert, example usage: ../audio/train/phorpa-2"
+        echo "Missing target folder to convert, example usage: convert_to_16 ../audio/train/phorpa-2"
         echo
         exit 1
 fi

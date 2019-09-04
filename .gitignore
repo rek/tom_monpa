@@ -1,1 +1,5 @@
 audio/
+data/train/.backup/
+data/lang
+data/local
+

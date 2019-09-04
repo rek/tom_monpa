@@ -3,10 +3,21 @@
 . ./cmd.sh
 set -e # exit on error
 
-# call the next line with the directory where the data is
-local/data_prep.sh ../../audio
+# from the s5 dir, run these commands:
 
-utils/prepare_lang.sh data/local/dict '!SIL' data/local/lang data/lang
+
+# Removing previously created data (from last run.sh execution)
+rm -rf ../exp ../mfcc
+./cleanup.sh train
+./cleanup.sh test
+# cleanup local local
+rm -rf ../data/local/lang ../data/lang ../data/local/tmp ../data/local/dict/lexiconp.txt
+
+# call the next line with the directory where the data is
+local/data_prep.sh ../audio/train/phorpa-2
+local/data_prep2.sh train/phorpa-2 speaker_1o
+
+utils/prepare_lang.sh ../data/local/dict '!SIL' ../data/local/lang ../data/lang
 
 local/rm_prepare_grammar.sh      # Traditional RM grammar (bigram word-pair)
 local/rm_prepare_grammar_ug.sh   # Unigram grammar (gives worse results, but
@@ -16,7 +27,7 @@ local/rm_prepare_grammar_ug.sh   # Unigram grammar (gives worse results, but
 # want to store MFCC features.   You can make a soft link if you want.
 featdir=mfcc
 
-for x in test_mar87 test_oct87 test_feb89 test_oct89 test_feb91 test_sep92 train; do
+for x in train; do
   steps/make_mfcc.sh --nj 8 --cmd "$train_cmd" data/$x exp/make_feat/$x $featdir
   #steps/make_plp.sh --nj 8 --cmd "$train_cmd" data/$x exp/make_feat/$x $featdir
   steps/compute_cmvn_stats.sh data/$x exp/make_feat/$x $featdir
